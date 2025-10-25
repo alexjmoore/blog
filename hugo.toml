@@ -1,0 +1,4 @@
+baseURL = 'https://alexmoore.dev/'
+languageCode = 'en-GB'
+title = 'Alex Moore - adventures in infrastructure'
+theme = 'hugo-profile'
