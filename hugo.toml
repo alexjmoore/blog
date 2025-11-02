@@ -16,14 +16,14 @@ theme = 'hugo-profile'
     weight = 1
 
 [params]
-  favicon = "/fav.png"
+  favicon = "/images/fav.png"
   author = "Alex Moore"
   keywords = "cloud, IT infrastructure, storage, compute, networking, Google Cloud, GCP, AWS, Azure, AI, ML, GPU, TPU"
   [params.hero]
     enable = true
     intro = "Hi, my name is"
     title = "Alex Moore."
-    subtitle = "Adventures in technology infrastructure..."
+    subtitle = "Adventures in infrastructure..."
     content = "With over 20 years in the tech industry, I've journeyed from hands-on engineering to leading teams at the forefront of cloud and AI. I'm passionate about demystifying technology and empowering others to build innovative solutions. When I'm not exploring the digital frontier, you might find me on a ski slope or a badminton court."
     image = "/images/me.png"
     [params.hero.button]

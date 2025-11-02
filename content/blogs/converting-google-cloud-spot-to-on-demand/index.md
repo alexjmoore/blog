@@ -3,10 +3,10 @@ title: "Converting Google Cloud Spot VMs to On-Demand Instances"
 date: 2025-11-02
 description: "A guide on how to convert your Google Cloud Spot VMs to On-Demand instances for production workloads."
 tags: ["Google Cloud", "GCP", "Compute Engine", "Spot VMs", "Cost Optimisation"]
-image: "mountain_background.jpg"
+image: "/images/mountain_background.jpg"
 ---
 
-It's easy to be forgiven for thinking that you cannot change a Google Cloud VM's provisioning model from Spot to On-Demand once it's been created. Even when stopping the instance and attempting to edit it via the Google Cloud Console, you'll be presented with a greyed-out "Provisioning model cannot be edited" message, as shown in the screenshot below.
+It's easy to be forgiven for thinking that you cannot change a Google Cloud VM's provisioning model from Spot to On-Demand once it's been created. Even when stopping the instance and attempting to edit it via the Google Cloud Console, you'll be presented with a greyed-out *"Provisioning model cannot be edited"* message, as shown in the screenshot below.
 
 However, this is not entirely true! While the console might suggest otherwise, you can indeed change the provisioning model using the `gcloud` command-line tool. This post will guide you through the process.
 
@@ -38,9 +38,10 @@ You can easily convert an existing Spot VM to an on-demand instance using the `g
 
     ```bash
     gcloud compute instances set-scheduling YOUR_INSTANCE_NAME \
-        --provisioning-model STANDARD \
-        --no-preemptible \
+        --provisioning-model=STANDARD \
+        --maintenance-policy=MIGRATE \
         --clear-instance-termination-action \
+        --no-preemptible \
         --zone=YOUR_ZONE
     ```
 
@@ -50,19 +51,21 @@ You can easily convert an existing Spot VM to an on-demand instance using the `g
     gcloud compute instances start YOUR_INSTANCE_NAME --zone=YOUR_ZONE
     ```
 
-That's it! Your instance is now an on-demand VM and will no longer be subject to preemption. You can also perform this conversion through the Google Cloud Console by editing the VM instance and changing the "VM provisioning model" from "Spot" to "Standard".
+That's it! Your instance is now an on-demand VM and will no longer be subject to preemption.
 
 ## When to Use Spot VMs vs. On-Demand
 
 To recap, here’s a simple guide for when to use each type of instance:
 
 *   **Use Spot VMs for:**
+
     *   Development and testing environments
     *   Batch processing jobs that can be interrupted
     *   High-performance computing (HPC) where you can checkpoint and restart jobs
     *   Any fault-tolerant or stateless workload
 
 *   **Use On-Demand instances for:**
+
     *   Production applications and services
     *   Databases and other stateful services
     *   Any workload that cannot tolerate interruptions
