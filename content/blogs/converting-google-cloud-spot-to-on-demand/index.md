@@ -1,12 +1,12 @@
 ---
-title: "Converting Google Cloud Spot VMs to On-Demand Instances"
+title: "Converting Spot VMs to On-Demand on Google Cloud"
 date: 2025-11-02
 description: "A guide on how to convert your Google Cloud Spot VMs to On-Demand instances for production workloads."
 tags: ["Google Cloud", "GCP", "Compute Engine", "Spot VMs", "Cost Optimisation"]
 image: "/images/mountain_background.jpg"
 ---
 
-It's easy to be forgiven for thinking that you cannot change a Google Cloud VM's provisioning model from Spot to On-Demand once it's been created. Even when stopping the instance and attempting to edit it via the Google Cloud Console, you'll be presented with a greyed-out *"Provisioning model cannot be edited"* message, as shown in the screenshot below.
+It's easy to be forgiven for thinking that you cannot change a Google Cloud VM's provisioning model from Spot to On-Demand once it's been created. Even when stopping the instance and attempting to edit it via the Google Cloud Console, you'll be presented with a greyed-out **"Provisioning model cannot be edited"** message, as shown in the screenshot below.
 
 However, this is not entirely true! While the console might suggest otherwise, you can indeed change the provisioning model using the `gcloud` command-line tool. This post will guide you through the process.
 
