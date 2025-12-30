@@ -1,5 +1,21 @@
 {{ define "head" }}
 <meta name="description" content="{{ .Title }} of {{ .Site.Title }}">
+{{/* Parse Medium Feed for Keywords */}}
+{{ $items := partial "get-medium-feed.html" . }}
+{{ $keywords := slice }}
+{{ range $items }}
+{{ if .category }}
+{{ if reflect.IsSlice .category }}
+{{ range .category }}
+{{ $keywords = $keywords | append . }}
+{{ end }}
+{{ else }}
+{{ $keywords = $keywords | append .category }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ $keywords = $keywords | uniq }}
+<meta name="keywords" content="{{ delimit $keywords " , " }}">
 <link rel="stylesheet" href="{{ .Site.Params.staticPath }}/css/list.css" media="all">
 {{ end }}
 
@@ -10,14 +26,35 @@
 {{ define "main" }}
 <div class="container pt-5" id="list-page">
     <h2 class="text-center pb-2">{{.Title}}</h2>
-    <div class="row">
-        {{ $feedURL := printf "https://medium.com/feed/@alexjmoore?t=%d" now.Unix }}
-        {{ with resources.GetRemote $feedURL }}
-        {{ $feedData := .Content | transform.Unmarshal }}
-        {{ $items := $feedData.channel.item }}
-        {{ if not (reflect.IsSlice $items) }}
-        {{ $items = slice $items }}
-        {{ end }}
+
+    {{ $items := partial "get-medium-feed.html" . }}
+
+    {{/* Extract Categories for Filter */}}
+    {{ $allCategories := slice }}
+    {{ range $items }}
+    {{ if .category }}
+    {{ if reflect.IsSlice .category }}
+    {{ range .category }}
+    {{ $allCategories = $allCategories | append . }}
+    {{ end }}
+    {{ else }}
+    {{ $allCategories = $allCategories | append .category }}
+    {{ end }}
+    {{ end }}
+    {{ end }}
+    {{ $allCategories = $allCategories | uniq | sort }}
+
+    {{/* Filter UI */}}
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <button class="btn btn-outline-primary btn-sm m-1 active filter-btn" data-filter="all">All</button>
+            {{ range $allCategories }}
+            <button class="btn btn-outline-primary btn-sm m-1 filter-btn" data-filter="{{ . }}">{{ . }}</button>
+            {{ end }}
+        </div>
+    </div>
+
+    <div class="row" id="articles-container">
         {{ range $i, $e := $items }}
         {{ $content := .encoded | plainify | htmlUnescape }}
         {{/* Extract image URL from the raw encoded content (before plainify) */}}
@@ -35,7 +72,17 @@
             {{ end }}
             {{ end }}
 
-            <div class="col-lg-4 col-md-6 my-3">
+            {{/* Categories for data attribute */}}
+            {{ $cats := "" }}
+            {{ if .category }}
+            {{ if reflect.IsSlice .category }}
+            {{ $cats = delimit .category "," }}
+            {{ else }}
+            {{ $cats = .category }}
+            {{ end }}
+            {{ end }}
+
+            <div class="col-lg-4 col-md-6 my-3 article-item" data-categories="{{ $cats }}">
                 <div class="card-columns">
                     <div class="card h-100 shadow-sm hover-shadow-lg transition-all">
                         {{ if ne $imgURL "" }}
@@ -67,9 +114,39 @@
                 </div>
             </div>
             {{ end }}
-            {{ else }}
-            <p class="text-center">Error fetching RSS feed.</p>
+            {{ if eq (len $items) 0 }}
+            <p class="text-center">Error fetching RSS feed or no articles found.</p>
             {{ end }}
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.filter-btn');
+        const articles = document.querySelectorAll('.article-item');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const filter = button.getAttribute('data-filter');
+
+                articles.forEach(article => {
+                    if (filter === 'all') {
+                        article.style.display = 'block';
+                        // Restore layout class if needed, though col-lg-4 handles it
+                    } else {
+                        const categories = article.getAttribute('data-categories').split(',');
+                        if (categories.includes(filter)) {
+                            article.style.display = 'block';
+                        } else {
+                            article.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
 {{ end }}

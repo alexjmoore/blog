@@ -1,0 +1,12 @@
+{{ $feedURL := printf "https://medium.com/feed/@alexjmoore?t=%d" now.Unix }}
+{{ $items := slice }}
+{{ with resources.GetRemote $feedURL }}
+{{ $feedData := .Content | transform.Unmarshal }}
+{{ if $feedData.channel.item }}
+{{ $items = $feedData.channel.item }}
+{{ if not (reflect.IsSlice $items) }}
+{{ $items = slice $items }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ return $items }}
