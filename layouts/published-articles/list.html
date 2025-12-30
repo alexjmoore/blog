@@ -1,0 +1,75 @@
+{{ define "head" }}
+<meta name="description" content="{{ .Title }} of {{ .Site.Title }}">
+<link rel="stylesheet" href="{{ .Site.Params.staticPath }}/css/list.css" media="all">
+{{ end }}
+
+{{ define "title" }}
+{{.Title }} | {{ .Site.Title }}
+{{ end }}
+
+{{ define "main" }}
+<div class="container pt-5" id="list-page">
+    <h2 class="text-center pb-2">{{.Title}}</h2>
+    <div class="row">
+        {{ $feedURL := printf "https://medium.com/feed/@alexjmoore?t=%d" now.Unix }}
+        {{ with resources.GetRemote $feedURL }}
+        {{ $feedData := .Content | transform.Unmarshal }}
+        {{ $items := $feedData.channel.item }}
+        {{ if not (reflect.IsSlice $items) }}
+        {{ $items = slice $items }}
+        {{ end }}
+        {{ range $i, $e := $items }}
+        {{ $content := .encoded | plainify | htmlUnescape }}
+        {{/* Extract image URL from the raw encoded content (before plainify) */}}
+        {{ $rawContent := .encoded | htmlUnescape }}
+        {{ $imgURL := "" }}
+        {{ $imgs := findRE `<img[^>]+src=["']([^"']+)["']` $rawContent 1 }}
+            {{ if gt (len $imgs) 0 }}
+            {{/* Extract just the URL from the tag */}}
+            {{ $imgTag := index $imgs 0 }}
+            {{ $urls := findRE `src=["']([^"']+)["']` $imgTag 1 }}
+            {{ if gt (len $urls) 0 }}
+            {{ $urlMatch := index $urls 0 }}
+            {{/* Remove src=" and " wrappers */}}
+            {{ $imgURL = replaceRE `src=["']([^"']+)["']` "$1" $urlMatch }}
+            {{ end }}
+            {{ end }}
+
+            <div class="col-lg-4 col-md-6 my-3">
+                <div class="card-columns">
+                    <div class="card h-100 shadow-sm hover-shadow-lg transition-all">
+                        {{ if ne $imgURL "" }}
+                        <div class="card-img-top-wrapper" style="height: 200px; overflow: hidden;">
+                            <img src="{{ $imgURL }}" class="card-img-top h-100 w-100" style="object-fit: cover;"
+                                alt="{{ .title }}">
+                        </div>
+                        {{ end }}
+                        <div class="card-body bg-transparent p-4">
+                            <a href="{{ .link }}" class="primary-font card-title text-decoration-none" target="_blank">
+                                <h5 class="card-title fw-bold text-dark" title="{{ .title }}">{{ .title | truncate 60 }}
+                                </h5>
+                            </a>
+                            <div class="card-text secondary-font text-muted mt-2">
+                                <p>{{ $content | truncate 150 }}</p>
+                            </div>
+                        </div>
+                        <div
+                            class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted small">
+                                <i class="fas fa-calendar-alt me-1"></i>{{ dateFormat "Jan 2, 2006" .pubDate }}
+                            </span>
+                            <a href="{{ .link }}" class="btn btn-outline-primary btn-sm rounded-pill px-3"
+                                target="_blank">
+                                Read on Medium <i class="fas fa-external-link-alt ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+            {{ else }}
+            <p class="text-center">Error fetching RSS feed.</p>
+            {{ end }}
+    </div>
+</div>
+{{ end }}

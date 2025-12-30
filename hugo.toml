@@ -9,31 +9,33 @@ theme = 'hugo-profile'
 
 [menu]
   [[menu.main]]
-    identifier = "blog"
-    name = "Blog"
-    title = "Blog posts"
-    url = "/blogs"
-    weight = 1
+    identifier = "published-articles"
+    name = "Published Articles"
+    title = "My Published Articles"
+    url = "/published-articles"
+    weight = 2
 
 [params]
   favicon = "/images/fav.png"
   author = "Alex Moore"
   keywords = "cloud, IT infrastructure, storage, compute, networking, Google Cloud, GCP, AWS, Azure, AI, ML, GPU, TPU"
+  [params.navbar]
+    disableSearch = true
   [params.hero]
     enable = true
     intro = "Hi, my name is"
     title = "Alex Moore."
     subtitle = "Adventures in infrastructure..."
-    content = "With over 20 years in the tech industry, I've journeyed from hands-on engineering to leading teams at the forefront of cloud and AI. I'm passionate about demystifying technology and empowering others to build innovative solutions. When I'm not exploring the digital frontier, you might find me on a ski slope or a badminton court."
-    image = "/images/me.png"
+    content = "With over 25 years in the tech industry, I've journeyed from hands-on engineering to leading teams at the forefront of cloud and AI. I'm passionate about demystifying technology and empowering others to build innovative solutions. When I'm not exploring the digital frontier, you might find me on a ski slope or a badminton court."
+    image = "/images/me.jpg"
     [params.hero.button]
       enable = false
   [params.about]
     enable = true
     title = "About Me"
-    image = "/images/me.png"
+    image = "/images/me.jpg"
     content = """
-With over two decades of experience in the technology industry, I've had the privilege of working with a diverse range of technologies and platforms. My journey has taken me from the early days of the internet to the cutting edge of AI and cloud computing. I'm a firm believer in the power of technology to solve real-world problems and I'm passionate about helping organizations leverage the cloud to its full potential.
+With over 25 years of experience in the technology industry, I've had the privilege of working with a diverse range of technologies and platforms. My journey has taken me from the early days of the internet to the cutting edge of AI and cloud computing. I'm a firm believer in the power of technology to solve real-world problems and I'm passionate about helping organizations leverage the cloud to its full potential.
 
 I've had the opportunity to wear many hats throughout my career, from a hands-on engineer to a technology leader. This has given me a unique perspective on the challenges and opportunities that come with digital transformation. I enjoy working with customers to understand their needs and helping them design and implement solutions that are not only technically sound but also deliver real business value.
 
@@ -45,7 +47,7 @@ When I'm not working, I enjoy spending time with my family, running, skiing, and
       items = ["Google Cloud (GCP)", "Amazon Web Services (AWS)", "Microsoft Azure", "Kubernetes", "Docker", "Terraform", "CI/CD", "Python", "Go", "AI/ML", "TPU/GPU", "Slurm"]
   [params.footer]
     [params.footer.recentPosts]
-      path = "blogs"
+      path = "published-articles"
       count = 3
       title = "Recent Posts"
       enable = true
@@ -54,3 +56,8 @@ When I'm not working, I enjoy spending time with my family, running, skiing, and
       github = "https://github.com/alexjmoore"
       linkedin = "https://www.linkedin.com/in/alexjmoore/"
       bluesky = "https://bsky.app/profile/alexmoore.dev"
+
+[security]
+  [security.http]
+    mediaTypes = ["application/rss+xml"]
+    urls = ["https://medium.com/.*"]
