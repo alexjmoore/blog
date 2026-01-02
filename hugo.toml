@@ -44,7 +44,7 @@ When I'm not working, I enjoy spending time with my family, running, skiing, and
     [params.about.skills]
       enable = true
       title = "Here are a few technologies I've been working with recently:"
-      items = ["Google Cloud (GCP)", "Amazon Web Services (AWS)", "Microsoft Azure", "Kubernetes", "Docker", "Terraform", "CI/CD", "Python", "Go", "AI/ML", "TPU/GPU", "Slurm"]
+      items = ["Google Cloud (GCP)", "Amazon Web Services (AWS)", "Microsoft Azure", "Kubernetes", "Docker", "Terraform", "CI/CD", "Python", "Go", "AI/ML", "Google TPUs", "NVIDIA GPUs", "Slurm"]
   [params.footer]
     [params.footer.recentPosts]
       path = "published-articles"
